@@ -4,10 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Superhero Secret Identities</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>Superheroes</h1>
-    
-    
+    <h1>Current Superheroes</h1>
+    <ul class="superheroes">
+        <% for(let i=0; i < superheroes.length; i++) { %>
+            <li class="superhero">
+                <span><%= superheroes[i].superheroName %></span>
+                <span><%= superheroes[i].secretIdentity %></span>
+                <span><%= superheroes[i].homeCity %></span>
+                <span class="delete">Delete</span>
+            </li>
+        <% } %>
+    </ul>
+
+    <h2>Add a Superhero</h2>
+
+    <form action="/superheroes" method="POST">
+        <input type="text" placeholder="Superhero Name" name="superheroName">
+        <input type="text" placeholder="Secret Identity" name="secretIdentity">
+        <input type="text" placeholder="Home City" name="homeCity">
+        <button type="submit">Submit</button>
+    </form>
+
+    <script src="/main.js"></script>
 </body>
 </html>

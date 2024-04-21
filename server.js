@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
-require('dotenv').config();
+// const bodyParser = require('body-parser');
+//require('dotenv').config();
+
+const PORT=3000;
+const DB_CONN='mongodb+srv://cdognovak:beepBoop@cluster0.qwtoxef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const MongoClient = require('mongodb').MongoClient;
 
-MongoClient.connect(process.env.DB_CONN, { useUnfifiedTopology: true })
+MongoClient.connect(DB_CONN)
     .then(client => {
         console.log('connected To Database');
         const db = client.db('superhero-db');
@@ -12,11 +15,14 @@ MongoClient.connect(process.env.DB_CONN, { useUnfifiedTopology: true })
 
         app.set('view engine', 'ejs');
 
-        app.use(bodyParser.urlencoded({ exteded: true }));
+        // app.use(bodyParser.urlencoded({ exteded: true }));
+        app.use(express.urlencoded({ extended: true }));
         app.use(express.static('public'));
-        app.use(bodyParser.json());
+        // app.use(bodyParser.json());
+        app.use(express.json());
 
         app.get('/', (req, res) => {
+            console.log('getting');
             const cursor = superheroCollection.find().toArray()
             .then(results => {
                 console.log(results);
@@ -35,6 +41,8 @@ MongoClient.connect(process.env.DB_CONN, { useUnfifiedTopology: true })
         });
 
         app.delete('/superheroes', (req, res) => {
+            console.log('trying to delete');
+            console.log(req.body);
             superheroCollection.deleteOne(
                 { superheroName: req.body.superheroName }
             )
@@ -44,8 +52,8 @@ MongoClient.connect(process.env.DB_CONN, { useUnfifiedTopology: true })
             .catch(error => console.error(error));
         });
 
-        app.listen(process.env.PORT, () => {
-            console.log(`Listening on ${process.env.PORT}`);
+        app.listen(PORT, () => {
+            console.log(`Listening on ${PORT}`);
         });
     })
     .catch(error => {
